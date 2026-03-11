@@ -1,21 +1,22 @@
 <?php
 //----------------------------------------------------
-function executeRequete($req)
+function executeRequete($req, $params = [])
 {
-    global $pdo; // accès à la connexion PDO définie dans init.inc.php
+    global $pdo; // connexion PDO définie dans init.inc.php
+
     try
     {
-        $resultat = $pdo->query($req); // exécute la requête
+        $stmt = $pdo->prepare($req); // prépare la requête
+        $stmt->execute($params); // exécute avec les paramètres
     }
     catch(PDOException $e)
     {
-        // En cas d'erreur SQL on affiche un message
         die("🛑 Une erreur est survenue sur la requête SQL.<br>
         Message de l'erreur : " . $e->getMessage() . "<br>
         Code de la requête : " . $req);
     }
 
-    return $resultat; // retourne l'objet PDOStatement
+    return $stmt; // retourne PDOStatement
 }
 //----------------------------------------------------
 function debug($var, $mode = 1)
